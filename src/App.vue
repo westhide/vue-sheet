@@ -1,10 +1,28 @@
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
+import Worksheet from "./core/worksheet";
+
+const data = $ref([
+  ...Array(10)
+    .fill(0)
+    .map((_, index) => ({ "-": index, A: `A${index}`, B: `B${index}` })),
+]);
+
+const worksheetRef = $ref<HTMLElement>();
+const worksheet = new Worksheet({
+  // teleport: { to:"#worksheetId" },
+  data,
+  columns: [],
+});
+worksheet.init();
+console.log(worksheet);
 </script>
 
 <template>
-  <div>Vue Sheet</div>
+  <div id="worksheetId" ref="worksheetRef" class="p-2"></div>
+
+  <div class="p-2">
+    <MyWorksheet :worksheet="worksheet" />
+  </div>
 </template>
 
 <style>
