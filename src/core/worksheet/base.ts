@@ -1,5 +1,7 @@
 import type { VNodeRef } from "vue";
 import type { RefValue } from "vue/macros";
+import type { PresetOptions } from "../option/preset";
+import { presetOptions } from "../option/preset";
 
 type Key = number | string;
 type CellValue = unknown;
@@ -66,75 +68,20 @@ export interface Options<T extends RowValue = RowValue> {
 }
 
 class Base<T extends RowValue = RowValue> {
-  presetOptions = {
-    column: {
-      align: "center",
-      type: "text",
-      width: 50,
-      classList: [
-        // size
-        "w-24",
-        // background
-        "bg-[#f3f3f3]",
-        // border
-        "border",
-        "border-[0.5px]",
-        "border-inherit",
-        "hover:outline",
-        "hover:outline-[0.5px]",
-        "hover:outline-black",
-        "hover:border-black",
-        // text
-        "text-center",
-        "align-middle",
-        // transition
-        "transition-all",
-        "ease-in-out",
-        "duration-300",
-      ],
-    },
-    row: {
-      classList: ["border-red-300"],
-    },
-    classList: {
-      wrapDiv: [
-        // display
-        "inline-block",
-        // size
-        "h-80",
-        "w-auto",
-        // scroll
-        "overflow-auto",
-      ],
-      table: [
-        // border
-        "border",
-        "border-separate",
-        "border-spacing-0",
-        "border-inherit",
-        // transition
-        "transition-all",
-        "ease-in-out",
-        "duration-300",
-      ],
-      thead: [""],
-      theadRow: [""],
-      tbody: [""],
-    },
-    fullscreen: false,
-  };
-
   el: VNodeRef;
   options: Required<Options<T>>;
 
-  _fixOptions(options: Options<T>): Required<Options<T>> {
+  _fixOptions(
+    options: Options<T>,
+    presetOptions: PresetOptions
+  ): Required<Options<T>> {
     const dataLen = options.data.length;
 
     // generate defaultOptions
-    const sheetClassList = $ref(this.presetOptions.classList);
+    const sheetClassList = $ref(presetOptions.classList);
     const defaultOptions: Partial<Options> = {
       classList: sheetClassList,
-      fullscreen: this.presetOptions.fullscreen,
+      fullscreen: presetOptions.fullscreen,
       size: {
         row: dataLen ?? 0,
         col: options.columns.length,
@@ -144,9 +91,9 @@ class Base<T extends RowValue = RowValue> {
     // set options.column
     if (!options.columns.length && dataLen) {
       options.columns = Object.keys(options.data[0]).map((key) => {
-        const columnClassList = $ref([...this.presetOptions.column.classList]);
+        const columnClassList = $ref([...presetOptions.column.classList]);
         return <Column>{
-          ...this.presetOptions.column,
+          ...presetOptions.column,
           classList: columnClassList,
           key,
           title: key,
@@ -157,7 +104,7 @@ class Base<T extends RowValue = RowValue> {
     // set options.rows
     if (!options.rows.length && dataLen) {
       options.rows = options.data.map(() => {
-        const rowClassList = $ref([...this.presetOptions.row.classList]);
+        const rowClassList = $ref([...presetOptions.row.classList]);
         return {
           classList: rowClassList,
         };
@@ -174,9 +121,9 @@ class Base<T extends RowValue = RowValue> {
     return <Required<Options<T>>>options;
   }
 
-  constructor(options: Options<T>) {
+  constructor(options: Options<T>, preset: PresetOptions = presetOptions) {
     this.el = ref();
-    this.options = this._fixOptions(options);
+    this.options = this._fixOptions(options, preset);
   }
 
   fullscreen(activate = !this.options.fullscreen) {
