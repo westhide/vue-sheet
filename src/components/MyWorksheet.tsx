@@ -11,31 +11,35 @@ export default {
   },
   setup(props: Props) {
     const options = props.worksheet.options;
-
     return () => {
       const tableTsx = (
-        <table
-          ref={props.worksheet.el}
-          class={options.classList.table.join(" ")}
-        >
-          <thead class={options.classList.thead.join(" ")}>
-            <tr>
-              {options.columns.map((col) => (
-                <th class={col.classList.join(" ")}>{col.title}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody class={options.classList.tbody.join(" ")}>
-            {/*TODO: virtual scroll*/}
-            {options.data.slice(0, 100).map((row) => (
+        <div class={joinClass(options.classList.wrapDiv)}>
+          <table
+            ref={props.worksheet.el}
+            class={joinClass(options.classList.table)}
+          >
+            <thead class={joinClass(options.classList.thead)}>
               <tr>
                 {options.columns.map((col) => (
-                  <td class={col.classList.join(" ")}>{row[col.key]}</td>
+                  <th class={joinClass(col.classList)}>{col.title}</th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody class={joinClass(options.classList.tbody)}>
+              {/*TODO: virtual scroll*/}
+              {options.data.slice(0, 100).map((row, index) => (
+                <tr class={joinClass(options.rows[index].classList)}>
+                  {(options.filter
+                    ? options.columns.filter((col) => options.filter(row, col))
+                    : options.columns
+                  ).map((col) => (
+                    <td class={joinClass(col.classList)}>{row[col.key]}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       );
 
       const teleport = options.teleport;

@@ -11,7 +11,7 @@ import Inspect from "vite-plugin-inspect";
 export default defineConfig({
   resolve: {
     alias: {
-      "@/": `${resolve(__dirname, "src")}/`,
+      "~/": `${resolve(__dirname, "src")}/`,
     },
   },
   plugins: [
@@ -32,7 +32,7 @@ export default defineConfig({
       directives: true,
       // importPathTransform: (v) => v,
       allowOverrides: false,
-      include: [/\.vue$/, /\.vue\?vue/, /\.tsx$/, /\.tsx\?tsx/],
+      include: [/\.vue$/, /\.vue\?vue/, /\.tsx$/],
       exclude: [
         /[\\/]node_modules[\\/]/,
         /[\\/]\.git[\\/]/,
@@ -41,6 +41,8 @@ export default defineConfig({
     }),
 
     AutoImport({
+      dirs: ["src/composable", "src/utils"],
+      include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/, /\.md$/],
       imports: [
         "vue",
         "vue/macros",

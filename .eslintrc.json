@@ -16,5 +16,7 @@
     "plugin:prettier/recommended",
     "eslint-config-prettier"
   ],
-  "rules": {}
+  "rules": {
+    "@typescript-eslint/no-non-null-assertion": "off"
+  }
 }
