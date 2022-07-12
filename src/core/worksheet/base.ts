@@ -88,6 +88,7 @@ class Base<T extends RowValue = RowValue> {
     // set options.column
     if (!options.columns.length && dataLen) {
       options.columns = objectKeys(options.data[0]).map((key) => {
+        // * use spread avoid ref the same classList
         const columnClassList = $ref([...preset.column.classList]);
         return {
           ...preset.column,
@@ -118,7 +119,8 @@ class Base<T extends RowValue = RowValue> {
     return <Required<Options<T>>>options;
   }
 
-  constructor(options: Options<T>, preset: Preset = _preset) {
+  // * use cloneDeep avoid shallow copy
+  constructor(options: Options<T>, preset: Preset = cloneDeep(_preset)) {
     this.el = ref();
     this.options = this._fixOptions(options, preset);
   }

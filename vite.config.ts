@@ -48,6 +48,7 @@ export default defineConfig({
         "vue/macros",
         {
           lodash: [
+            "cloneDeep",
             "defaultsDeep",
             ["remove", "arrayRemove"],
             ["pull", "arrayPull"],
