@@ -1,6 +1,6 @@
 type ReplaceUnit<T> = [T, T];
-export function arrayReplace<T>(target: T[], replace: ReplaceUnit<T>[]): void;
-export function arrayReplace<T>(target: T[], replace: T, toValue: T): void;
+export function arrayReplace<T>(target: T[], entries: ReplaceUnit<T>[]): void;
+export function arrayReplace<T>(target: T[], formValue: T, toValue: T): void;
 
 export function arrayReplace<T>(target: T[], replace: unknown, toValue?: T) {
   target.forEach((value, index) => {
