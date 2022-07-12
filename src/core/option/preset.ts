@@ -1,7 +1,9 @@
+import type { Column } from "../worksheet/base";
+
 export const preset = {
   column: {
-    align: "center",
-    type: "text",
+    align: <Column["align"]>"center",
+    type: <Column["type"]>"text",
     width: 50,
     classList: [
       // size

@@ -3,16 +3,16 @@ import type { RefValue } from "vue/macros";
 import type { Preset } from "../option/preset";
 import { preset as _preset } from "../option/preset";
 
-type Key = number | string;
+type Key = number | string | symbol;
 type CellValue = unknown;
 
-type RowValue<CV extends CellValue = CellValue> = Record<Key, CV> | CV[];
+type RowValue<CV extends CellValue = CellValue> = Record<Key, CV>;
 type Data<T extends RowValue = RowValue> = RefValue<T[]>;
 type RowValueKey = keyof RowValue;
 
 type CellRender = unknown;
 
-// TODO: classList use Set
+// TODO: classList switch to DOMTokenList
 type ClassList = RefValue<string[]>;
 type SheetClassList = Record<
   "wrapDiv" | "table" | "tbody" | "thead",
@@ -43,7 +43,7 @@ interface Cell {
   classList: ClassList;
 }
 
-interface Column
+export interface Column
   extends Pick<
     Cell,
     "align" | "type" | "mask" | "width" | "render" | "classList"
@@ -87,9 +87,9 @@ class Base<T extends RowValue = RowValue> {
 
     // set options.column
     if (!options.columns.length && dataLen) {
-      options.columns = Object.keys(options.data[0]).map((key) => {
+      options.columns = objectKeys(options.data[0]).map((key) => {
         const columnClassList = $ref([...preset.column.classList]);
-        return <Column>{
+        return {
           ...preset.column,
           classList: columnClassList,
           key,
