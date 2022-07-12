@@ -111,11 +111,6 @@ class Base<T extends RowValue = RowValue> {
 
     options = { ...defaultOptions, ...options };
 
-    // options.classList = <TableClassList>{
-    //   ...defaultOptions.classList,
-    //   ...options.classList,
-    // };
-
     return <Required<Options<T>>>options;
   }
 
