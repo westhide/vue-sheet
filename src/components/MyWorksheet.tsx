@@ -11,7 +11,19 @@ export default {
   },
   setup(props: Props) {
     const options = props.worksheet.options;
+    const data = options.data.slice(0, 100);
+
+    function filter<T>(
+      target: T[],
+      fn?: (value: T, index: number, array: T[]) => boolean
+    ) {
+      return fn ? target.filter(fn) : target;
+    }
+
     return () => {
+      const columns = filter(options.columns, options.filter.col);
+      const rows = filter(data, options.filter.row);
+
       const tableTsx = (
         <div class={joinClass(options.classList.wrapDiv)}>
           <table
@@ -20,23 +32,27 @@ export default {
           >
             <thead class={joinClass(options.classList.thead)}>
               <tr>
-                {options.columns.map((col) => (
+                {/*TODO: rowLabel & thead corner*/}
+                <tr></tr>
+                {columns.map((col) => (
                   <th class={joinClass(col.classList)}>{col.title}</th>
                 ))}
               </tr>
             </thead>
             <tbody class={joinClass(options.classList.tbody)}>
               {/*TODO: virtual scroll*/}
-              {options.data.slice(0, 100).map((row, index) => (
-                <tr class={joinClass(options.rows[index].classList)}>
-                  {(options.filter
-                    ? options.columns.filter((col) => options.filter(row, col))
-                    : options.columns
-                  ).map((col) => (
-                    <td class={joinClass(col.classList)}>{row[col.key]}</td>
-                  ))}
-                </tr>
-              ))}
+              {rows.map((row, index) => {
+                return (
+                  <tr class={joinClass(options.rows[row.id].classList)}>
+                    <td class={joinClass(options.rowLabels[row.id].classList)}>
+                      {index + 1}
+                    </td>
+                    {columns.map((col) => (
+                      <td class={joinClass(col.classList)}>{row[col.key]}</td>
+                    ))}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

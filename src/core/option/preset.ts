@@ -28,7 +28,24 @@ export const preset = {
     ],
   },
   row: {
-    classList: ["border-red-300"],
+    classList: [""],
+  },
+  rowLabel: {
+    classList: [
+      // size
+      "w-auto",
+      // background
+      "bg-[#f3f3f3]",
+      // border
+      "border",
+      "border-[0.5px]",
+      "border-inherit",
+      // text
+      "text-center",
+      "align-middle",
+      // space
+      "px-2",
+    ],
   },
   classList: {
     wrapDiv: [
@@ -46,6 +63,8 @@ export const preset = {
       "border-separate",
       "border-spacing-0",
       "border-inherit",
+      // cursor
+      "hover:cursor-cell",
       // transition
       "transition-all",
       "ease-in-out",
@@ -56,6 +75,7 @@ export const preset = {
     tbody: [""],
   },
   fullscreen: false,
+  filter: {},
 };
 
 export type Preset = typeof preset;

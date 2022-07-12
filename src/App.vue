@@ -3,7 +3,7 @@ const data = $ref([
   ...Array(100)
     .fill(0)
     .map((_, index) => ({
-      "-": index,
+      id: `#${index}`,
       A: `A${index}`,
       B: `B${index}`,
       C: `C${index}`,
@@ -17,9 +17,14 @@ const worksheet = new Worksheet({
   // teleport: { to: "#worksheetId" },
   data,
   columns: [],
-  rows: [],
-  filter(row) {
-    return row.A !== "A2";
+  rows: {},
+  filter: {
+    row(row) {
+      return row.A !== "A2";
+    },
+    col(col) {
+      return col.key !== "D";
+    },
   },
 });
 worksheet.init();

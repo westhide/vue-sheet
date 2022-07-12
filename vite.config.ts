@@ -50,6 +50,7 @@ export default defineConfig({
           lodash: [
             "cloneDeep",
             "defaultsDeep",
+            "isEmpty",
             ["remove", "arrayRemove"],
             ["pull", "arrayPull"],
           ],
