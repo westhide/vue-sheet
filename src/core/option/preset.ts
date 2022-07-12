@@ -1,4 +1,4 @@
-export const presetOptions = {
+export const preset = {
   column: {
     align: "center",
     type: "text",
@@ -55,4 +55,5 @@ export const presetOptions = {
   },
   fullscreen: false,
 };
-export type PresetOptions = typeof presetOptions;
+
+export type Preset = typeof preset;

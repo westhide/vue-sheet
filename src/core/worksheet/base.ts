@@ -1,7 +1,7 @@
 import type { VNodeRef } from "vue";
 import type { RefValue } from "vue/macros";
-import type { PresetOptions } from "../option/preset";
-import { presetOptions } from "../option/preset";
+import type { Preset } from "../option/preset";
+import { preset as _preset } from "../option/preset";
 
 type Key = number | string;
 type CellValue = unknown;
@@ -71,17 +71,14 @@ class Base<T extends RowValue = RowValue> {
   el: VNodeRef;
   options: Required<Options<T>>;
 
-  _fixOptions(
-    options: Options<T>,
-    presetOptions: PresetOptions
-  ): Required<Options<T>> {
+  _fixOptions(options: Options<T>, preset: Preset): Required<Options<T>> {
     const dataLen = options.data.length;
 
     // generate defaultOptions
-    const sheetClassList = $ref(presetOptions.classList);
+    const sheetClassList = $ref(preset.classList);
     const defaultOptions: Partial<Options> = {
       classList: sheetClassList,
-      fullscreen: presetOptions.fullscreen,
+      fullscreen: preset.fullscreen,
       size: {
         row: dataLen ?? 0,
         col: options.columns.length,
@@ -91,9 +88,9 @@ class Base<T extends RowValue = RowValue> {
     // set options.column
     if (!options.columns.length && dataLen) {
       options.columns = Object.keys(options.data[0]).map((key) => {
-        const columnClassList = $ref([...presetOptions.column.classList]);
+        const columnClassList = $ref([...preset.column.classList]);
         return <Column>{
-          ...presetOptions.column,
+          ...preset.column,
           classList: columnClassList,
           key,
           title: key,
@@ -104,7 +101,7 @@ class Base<T extends RowValue = RowValue> {
     // set options.rows
     if (!options.rows.length && dataLen) {
       options.rows = options.data.map(() => {
-        const rowClassList = $ref([...presetOptions.row.classList]);
+        const rowClassList = $ref([...preset.row.classList]);
         return {
           classList: rowClassList,
         };
@@ -121,7 +118,7 @@ class Base<T extends RowValue = RowValue> {
     return <Required<Options<T>>>options;
   }
 
-  constructor(options: Options<T>, preset: PresetOptions = presetOptions) {
+  constructor(options: Options<T>, preset: Preset = _preset) {
     this.el = ref();
     this.options = this._fixOptions(options, preset);
   }

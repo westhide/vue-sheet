@@ -1,5 +1,5 @@
 import Base from "./base";
-export type { PresetOptions } from "../option/preset";
-export { presetOptions } from "../option/preset";
+export type { Preset } from "../option/preset";
+export { preset } from "../option/preset";
 
 export default Base;
