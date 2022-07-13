@@ -76,7 +76,7 @@ export interface Options<T extends RowValue> {
   };
 }
 
-class Base<T extends RowValue = RowValue> {
+export default class Base<T extends RowValue = RowValue> {
   el: VNodeRef;
   options: Required<Options<T>>;
 
@@ -172,5 +172,3 @@ class Base<T extends RowValue = RowValue> {
     this._prepare();
   }
 }
-
-export default Base;

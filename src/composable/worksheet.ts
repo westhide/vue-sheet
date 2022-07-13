@@ -1,2 +1,1 @@
-import _Worksheet from "../core/worksheet";
-export const Worksheet = _Worksheet;
+export { default as Worksheet } from "../core/worksheet";

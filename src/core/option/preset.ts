@@ -1,5 +1,6 @@
 import type { Column } from "../worksheet/base";
 
+export type Preset = typeof preset;
 export const preset = {
   column: {
     align: <Column["align"]>"center",
@@ -77,5 +78,3 @@ export const preset = {
   fullscreen: false,
   filter: {},
 };
-
-export type Preset = typeof preset;
