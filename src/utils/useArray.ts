@@ -18,3 +18,9 @@ export function arrayReplace<T>(target: T[], replace: unknown, toValue?: T) {
     }
   });
 }
+
+type FilterFn<T> = (value: T, index: number, array: T[]) => boolean;
+
+export function reduceFilter<T>(target: T[], fns?: FilterFn<T>[]) {
+  return fns ? fns.reduce((rows, fn) => rows.filter(fn), target) : target;
+}

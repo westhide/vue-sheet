@@ -10,44 +10,32 @@ export default {
     worksheet: Worksheet,
   },
   setup(props: Props) {
-    const options = props.worksheet.options;
-    const data = options.data.slice(0, 100);
-
-    function filter<T>(
-      target: T[],
-      fn?: (value: T, index: number, array: T[]) => boolean
-    ) {
-      return fn ? target.filter(fn) : target;
-    }
+    const worksheet = props.worksheet;
+    const { el, options, tableData, tableColumns } = worksheet;
+    const { teleport, classList: sheetClassList } = options;
 
     return () => {
-      const columns = filter(options.columns, options.filter.col);
-      const rows = filter(data, options.filter.row);
-
       const tableTsx = (
-        <div class={joinClass(options.classList.wrapDiv)}>
-          <table
-            ref={props.worksheet.el}
-            class={joinClass(options.classList.table)}
-          >
-            <thead class={joinClass(options.classList.thead)}>
+        <div class={joinClass(sheetClassList.wrapDiv)}>
+          <table ref={el} class={joinClass(sheetClassList.table)}>
+            <thead class={joinClass(sheetClassList.thead)}>
               <tr>
                 {/*TODO: rowLabel & thead corner*/}
                 <tr></tr>
-                {columns.map((col) => (
+                {tableColumns.value.map((col) => (
                   <th class={joinClass(col.classList)}>{col.title}</th>
                 ))}
               </tr>
             </thead>
-            <tbody class={joinClass(options.classList.tbody)}>
+            <tbody class={joinClass(sheetClassList.tbody)}>
               {/*TODO: virtual scroll*/}
-              {rows.map((row, index) => {
+              {Object.entries(tableData.value).map(([key, row], index) => {
                 return (
-                  <tr class={joinClass(options.rows[row.id].classList)}>
-                    <td class={joinClass(options.rowLabels[row.id].classList)}>
+                  <tr class={joinClass(options.rows[key].classList)}>
+                    <td class={joinClass(options.rowLabels[key].classList)}>
                       {index + 1}
                     </td>
-                    {columns.map((col) => (
+                    {tableColumns.value.map((col) => (
                       <td class={joinClass(col.classList)}>{row[col.key]}</td>
                     ))}
                   </tr>
@@ -58,7 +46,6 @@ export default {
         </div>
       );
 
-      const teleport = options.teleport;
       return teleport ? (
         <Teleport {...teleport}>{tableTsx}</Teleport>
       ) : (

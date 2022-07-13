@@ -1,4 +1,4 @@
-import type { VNodeRef } from "vue";
+import type { VNodeRef, ComputedRef } from "vue";
 import type { RefValue } from "vue/macros";
 import type { Preset } from "../option/preset";
 import { preset as _preset } from "../option/preset";
@@ -7,8 +7,8 @@ type Key = number | string | symbol;
 type CellValue = unknown;
 
 type RowValue<CV extends CellValue = CellValue> = Record<Key, CV> &
-  Record<"id", Key>;
-type Data<T extends RowValue = RowValue> = RefValue<T[]>;
+  Partial<Record<"id", Key>>;
+type Data<T extends RowValue> = RefValue<T[]>;
 
 type CellRender = unknown;
 
@@ -64,27 +64,27 @@ export interface Options<T extends RowValue> {
   teleport?: { to: string | HTMLElement; disabled?: boolean };
   data: Data<T>;
   columns: Column<T>[];
-  rows?: Record<T["id"], Row>;
-  rowLabels?: Record<T["id"], RowLabel>;
+  rows?: Record<Key, Row>;
+  rowLabels?: Record<Key, RowLabel>;
   size?: { row: number; col: number };
   fullscreen?: boolean;
   classList?: SheetClassList;
   filter: {
-    row?: (row: T, index: number, array: T[]) => boolean;
-    col?: (col: Column<T>, index: number, array: Column<T>[]) => boolean;
-    cell?: (row: T, col: Column<T>) => boolean;
+    row?: Array<(row: T, index: number, array: T[]) => boolean>;
+    col?: Array<(col: Column<T>, index: number, array: Column<T>[]) => boolean>;
+    cell?: Array<(row: T, col: Column<T>) => boolean>;
   };
 }
 
 export default class Base<T extends RowValue = RowValue> {
   el: VNodeRef;
   options: Required<Options<T>>;
+  tableData: ComputedRef<Record<Key, T>>;
+  tableColumns: ComputedRef<Column<T>[]>;
 
-  static _fixOptions<T extends RowValue = RowValue>(
-    options: Options<T>,
-    preset: Preset
-  ): Required<Options<T>> {
+  fixOptions(options: Options<T>, preset: Preset): Required<Options<T>> {
     const dataLen = options.data.length;
+    const tableDataKeys = objectKeys(this.tableData.value);
 
     // generate defaultOptions
     const sheetClassList = $ref(preset.classList);
@@ -114,10 +114,10 @@ export default class Base<T extends RowValue = RowValue> {
 
       // set options.rows
       if (isEmpty(options.rows)) {
-        const rowEntries = options.data.map((row) => {
+        const rowEntries = tableDataKeys.map((key) => {
           const rowClassList = $ref([...preset.row.classList]);
           return [
-            row.id,
+            key,
             {
               classList: rowClassList,
             },
@@ -128,10 +128,10 @@ export default class Base<T extends RowValue = RowValue> {
 
       // set options.rowLabels
       if (!options.rowLabels) {
-        const rowLabelEntries = options.data.map((row) => {
+        const rowLabelEntries = tableDataKeys.map((key) => {
           const rowLabelClassList = $ref([...preset.rowLabel.classList]);
           return [
-            row.id,
+            key,
             {
               classList: rowLabelClassList,
             },
@@ -149,7 +149,17 @@ export default class Base<T extends RowValue = RowValue> {
   // * use cloneDeep avoid shallow copy
   constructor(options: Options<T>, preset: Preset = cloneDeep(_preset)) {
     this.el = ref();
-    this.options = Base._fixOptions(options, preset);
+    this.tableData = computed(() => {
+      const { data, filter } = options;
+      const filterData = reduceFilter(data, filter.row);
+      return Object.fromEntries(
+        filterData.map((row, index) => [row.id ?? index, row])
+      );
+    });
+    this.options = this.fixOptions(options, preset);
+    this.tableColumns = computed(() =>
+      reduceFilter(this.options.columns, this.options.filter.col)
+    );
   }
 
   fullscreen(activate = !this.options.fullscreen) {
@@ -164,11 +174,7 @@ export default class Base<T extends RowValue = RowValue> {
     }
   }
 
-  _prepare() {
-    //
-  }
-
   init() {
-    this._prepare();
+    //
   }
 }

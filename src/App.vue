@@ -19,17 +19,22 @@ const worksheet = new Worksheet({
   columns: [],
   rows: {},
   filter: {
-    row(row) {
-      return row.A !== "A2";
-    },
-    col(col) {
-      return col.key !== "D";
-    },
+    row: [
+      (row) => {
+        return row.A !== "A2";
+      },
+    ],
+    col: [
+      (col) => {
+        return col.key !== "D";
+      },
+    ],
   },
 });
 worksheet.init();
 
 function onClick() {
+  worksheet.options.data.shift();
   arrayReplace(
     worksheet.options.classList.table,
     "border-inherit",
@@ -38,7 +43,7 @@ function onClick() {
 
   arrayReplace(worksheet.options.columns[0].classList, [
     ["w-24", "w-40"],
-    ["", "bg-[#f3f3f3]"],
+    ["bg-[#f3f3f3]", "bg-red-300"],
   ]);
 }
 
@@ -47,7 +52,10 @@ function onReset() {
     ["border-red-500", "border-inherit"],
   ]);
 
-  arrayReplace(worksheet.options.columns[0].classList, [["w-40", "w-24"]]);
+  arrayReplace(worksheet.options.columns[0].classList, [
+    ["w-40", "w-24"],
+    ["bg-red-300", "bg-[#f3f3f3]"],
+  ]);
   console.log(worksheet);
 }
 </script>
