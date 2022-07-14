@@ -20,27 +20,25 @@ export default {
 
     return () => {
       const tableTsx = (
-        <div class={joinClass(sheetClassList.wrapDiv)}>
-          <table ref={el} class={joinClass(sheetClassList.table)}>
-            <thead class={joinClass(sheetClassList.thead)}>
-              <tr class={joinClass(sheetClassList.theadRow)}>
+        <div class={sheetClassList.wrapDiv}>
+          <table ref={el} class={sheetClassList.table}>
+            <thead class={sheetClassList.thead}>
+              <tr class={sheetClassList.theadRow}>
                 {/*TODO: rowLabel & thead corner*/}
-                <th class={joinClass(sheetClassList.corner)}></th>
+                <th class={sheetClassList.corner}></th>
                 {tableColumns.map((col) => (
-                  <th class={joinClass(col.classList)}>{col.title}</th>
+                  <th class={col.classList}>{col.title}</th>
                 ))}
               </tr>
             </thead>
-            <tbody class={joinClass(sheetClassList.tbody)}>
+            <tbody class={sheetClassList.tbody}>
               {/*TODO: virtual scroll*/}
               {tableRows.map(({ row, classList, label }, index) => {
                 return (
-                  <tr class={joinClass(classList)}>
-                    <td class={joinClass(label.classList)}>
-                      {label.value ?? index + 1}
-                    </td>
+                  <tr class={classList}>
+                    <td class={label.classList}>{label.value ?? index + 1}</td>
                     {tableColumns.map((col) => (
-                      <td class={joinClass(row[col.key].classList)}>
+                      <td class={row[col.key].classList}>
                         {row[col.key].value}
                       </td>
                     ))}
