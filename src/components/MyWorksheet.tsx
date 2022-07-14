@@ -23,9 +23,9 @@ export default {
         <div class={joinClass(sheetClassList.wrapDiv)}>
           <table ref={el} class={joinClass(sheetClassList.table)}>
             <thead class={joinClass(sheetClassList.thead)}>
-              <tr>
+              <tr class={joinClass(sheetClassList.theadRow)}>
                 {/*TODO: rowLabel & thead corner*/}
-                <tr></tr>
+                <th class={joinClass(sheetClassList.corner)}></th>
                 {tableColumns.map((col) => (
                   <th class={joinClass(col.classList)}>{col.title}</th>
                 ))}
@@ -36,9 +36,13 @@ export default {
               {tableRows.map(({ row, classList, label }, index) => {
                 return (
                   <tr class={joinClass(classList)}>
-                    <td class={joinClass(label.classList)}>{index + 1}</td>
+                    <td class={joinClass(label.classList)}>
+                      {label.value ?? index + 1}
+                    </td>
                     {tableColumns.map((col) => (
-                      <td class={joinClass(col.classList)}>{row[col.key]}</td>
+                      <td class={joinClass(row[col.key].classList)}>
+                        {row[col.key].value}
+                      </td>
                     ))}
                   </tr>
                 );

@@ -3,11 +3,17 @@ const data = [
   ...Array(100)
     .fill(0)
     .map((_, index) => ({
+      id: `#${index}`,
       A: `A${index}`,
       B: `B${index}`,
       C: `C${index}`,
       D: `D${index}`,
       E: `E${index}`,
+      F: `F${index}`,
+      G: `G${index}`,
+      H: `H${index}`,
+      I: `I${index}`,
+      J: `J${index}`,
     })),
 ];
 
@@ -15,10 +21,11 @@ const worksheetRef = $ref<HTMLElement>();
 const worksheet = new Worksheet({
   // teleport: { to: "#worksheetId" },
   data,
+  primaryKey: "id",
   filter: {
     row: [
       ({ row }) => {
-        return row.A !== "A2";
+        return row.A.value !== "A2";
       },
     ],
     col: [
@@ -41,7 +48,7 @@ function onClick() {
     "border-red-500"
   );
 
-  arrayReplace(options.table.columns[0].classList, [
+  arrayReplace(options.table.columns[1].classList, [
     ["w-24", "w-40"],
     ["bg-[#f3f3f3]", "bg-red-300"],
   ]);
@@ -55,7 +62,7 @@ function onReset() {
     ["border-red-500", "border-inherit"],
   ]);
 
-  arrayReplace(options.table.columns[0].classList, [
+  arrayReplace(options.table.columns[1].classList, [
     ["w-40", "w-24"],
     ["bg-red-300", "bg-[#f3f3f3]"],
   ]);

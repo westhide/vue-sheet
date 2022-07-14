@@ -8,9 +8,58 @@ export const preset = {
     width: 50,
     classList: [
       // size
-      "w-24",
       // background
       "bg-[#f3f3f3]",
+      // border
+      "border",
+      "border-[0.5px]",
+      "border-inherit",
+      // text
+      "text-center",
+      "align-middle",
+      // cursor
+      "hover:cursor-grab",
+      // transition
+      "transition-all",
+      "ease-in-out",
+      "duration-300",
+      // space
+      "px-2",
+      "w-24",
+    ],
+  },
+  row: {
+    classList: ["t-row"],
+    label: {
+      classList: [
+        // size
+        "w-10",
+        // background
+        "bg-[#f3f3f3]",
+        // border
+        "border",
+        "border-[0.5px]",
+        "border-inherit",
+        // text
+        "text-center",
+        "align-middle",
+        // cursor
+        "hover:cursor-pointer",
+        // transition
+        "transition-all",
+        "ease-in-out",
+        "duration-300",
+        // space
+        "px-2",
+      ],
+    },
+  },
+  cell: {
+    classList: [
+      // size
+      "w-24",
+      // background
+      // "bg-[#f3f3f3]",
       // border
       "border",
       "border-[0.5px]",
@@ -22,58 +71,48 @@ export const preset = {
       // text
       "text-center",
       "align-middle",
-      // transition
-      "transition-all",
-      "ease-in-out",
-      "duration-300",
-    ],
-  },
-  row: {
-    classList: [""],
-    label: {
-      classList: [
-        // size
-        "w-auto",
-        // background
-        "bg-[#f3f3f3]",
-        // border
-        "border",
-        "border-[0.5px]",
-        "border-inherit",
-        // text
-        "text-center",
-        "align-middle",
-        // space
-        "px-2",
-      ],
-    },
-  },
-  sheetClassList: {
-    wrapDiv: [
-      // display
-      "inline-block",
-      // size
-      "h-80",
-      "w-auto",
-      // scroll
-      "overflow-auto",
-    ],
-    table: [
-      // border
-      "border",
-      "border-separate",
-      "border-spacing-0",
-      "border-inherit",
       // cursor
       "hover:cursor-cell",
       // transition
       "transition-all",
       "ease-in-out",
       "duration-300",
+      // space
+      "px-2",
     ],
-    thead: [""],
-    theadRow: [""],
-    tbody: [""],
+  },
+  sheetClassList: {
+    wrapDiv: [
+      // display
+      "inline-block",
+      // size
+      "w-auto",
+      "max-w-full",
+      "max-h-96",
+      // scroll
+      "overflow-auto",
+      // effects
+      // "shadow-xl",
+    ],
+    corner: ["bg-[#f3f3f3]"],
+    table: [
+      // layout
+      // "relative",
+      // size
+      "min-w-max",
+      // border
+      "border",
+      "border-separate",
+      "border-spacing-0",
+      "border-inherit",
+      // transition
+      "transition-all",
+      "ease-in-out",
+      "duration-300",
+    ],
+    thead: ["thead"],
+    theadRow: ["thead-row"],
+    tbody: ["tbody"],
   },
   fullscreen: false,
   nanoid: { size: 10 },

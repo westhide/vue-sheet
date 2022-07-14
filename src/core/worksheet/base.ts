@@ -5,20 +5,23 @@ import { preset as _preset } from "../option/preset";
 type Key = number | string | symbol;
 type CellValue = unknown;
 
-type RowValue<V extends CellValue = CellValue> = Record<Key, V> &
-  Partial<Record<"__id__", Key>>;
+export type PrimaryKey<T> = keyof T | undefined;
+export type RowValue<
+  PK extends Key | undefined = undefined,
+  V extends CellValue = CellValue
+> = Record<Key, V> & Record<Exclude<PK, undefined>, Key>;
 
 type CellRender = unknown;
 
 // TODO: classList switch to DOMTokenList
 type ClassList = string[];
 type SheetClassList = Record<
-  "wrapDiv" | "table" | "tbody" | "thead",
+  "wrapDiv" | "corner" | "table" | "thead" | "theadRow" | "tbody",
   ClassList
 >;
 
-interface Cell {
-  map: { row: Key; col: Key };
+interface Cell<T extends RowValue> {
+  map: { row: Key; col: keyof T };
   align: "center" | "left" | "right";
   type:
     | "autocomplete"
@@ -43,7 +46,7 @@ interface Cell {
 
 export interface Column<T extends RowValue = RowValue>
   extends Pick<
-    Cell,
+    Cell<T>,
     "align" | "type" | "mask" | "width" | "render" | "classList"
   > {
   key: keyof T;
@@ -52,15 +55,15 @@ export interface Column<T extends RowValue = RowValue>
 
 interface Row<T extends RowValue> {
   id: Key;
-  rawIndex: number;
-  row: T;
+  row: Record<keyof T, Cell<T>>;
   classList: ClassList;
   label: {
+    value?: CellValue;
     classList: ClassList;
   };
 }
 
-export interface Options<T extends RowValue> {
+export interface Options<PK extends PrimaryKey<T>, T extends RowValue<PK>> {
   teleport?: { to: string | HTMLElement; disabled?: boolean };
   data: T[];
   table: {
@@ -75,40 +78,49 @@ export interface Options<T extends RowValue> {
     col: Array<(col: Column<T>, index: number, array: Column<T>[]) => boolean>;
     cell: Array<(row: T, col: Column<T>) => boolean>;
   };
-  nanoid?: { size: number };
+  primaryKey?: PK;
+  nanoid: { size: number };
 }
 
-interface InitOptions<T extends RowValue>
-  extends Pick<Options<T>, "teleport" | "data">,
+interface InitOptions<PK extends PrimaryKey<T>, T extends RowValue<PK>>
+  extends Pick<Options<PK, T>, "teleport" | "data" | "primaryKey">,
     Partial<
-      Pick<Options<T>, "size" | "fullscreen" | "sheetClassList" | "nanoid">
+      Pick<Options<PK, T>, "size" | "fullscreen" | "sheetClassList" | "nanoid">
     > {
-  table?: Partial<Options<T>["table"]>;
-  filter?: Partial<Options<T>["filter"]>;
+  table?: Partial<Options<PK, T>["table"]>;
+  filter?: Partial<Options<PK, T>["filter"]>;
 }
 
-export default class Base<T extends RowValue = RowValue> {
+export default class Base<
+  PK extends PrimaryKey<T> = undefined,
+  T extends RowValue<PK> = RowValue<PK>
+> {
   el: VNodeRef;
-  options: UnwrapNestedRefs<Options<T>>;
+  options: UnwrapNestedRefs<Options<PK, T>>;
 
-  fixOptions(options: InitOptions<T>, preset: Preset) {
-    const table = options.table ?? {};
-    const nanoidSize = options.nanoid?.size ?? preset.nanoid.size;
+  fixOptions(options: InitOptions<PK, T>, preset: Preset) {
+    const { table = {}, primaryKey } = options;
+    const { size: nanoidSize } = options.nanoid ?? preset.nanoid;
 
     // set table.rows
     if (!table.rows) {
-      table.rows = options.data.map(
-        (row, index) =>
-          <Row<T>>{
-            id: nanoid(nanoidSize),
-            rawIndex: index,
-            row,
-            classList: [...preset.row.classList],
-            label: {
-              classList: [...preset.row.label.classList],
-            },
-          }
-      );
+      table.rows = options.data.map((row) => {
+        const rowEntries = Object.entries(row).map(
+          ([key, value]) =>
+            <[keyof T, Cell<T>]>[
+              key,
+              { value, classList: [...preset.cell.classList] },
+            ]
+        );
+        return <Row<T>>{
+          id: primaryKey ? row[primaryKey!] : nanoid(nanoidSize),
+          row: Object.fromEntries(rowEntries),
+          classList: [...preset.row.classList],
+          label: {
+            classList: [...preset.row.label.classList],
+          },
+        };
+      });
     }
 
     // set options.column
@@ -132,14 +144,18 @@ export default class Base<T extends RowValue = RowValue> {
       },
       fullscreen: preset.fullscreen,
       sheetClassList: preset.sheetClassList,
+      nanoid: preset.nanoid,
       ...options,
     };
 
-    return reactive(<Options<T>>options);
+    return reactive(<Options<PK, T>>options);
   }
 
   // * use cloneDeep avoid shallow copy
-  constructor(options: InitOptions<T>, preset: Preset = cloneDeep(_preset)) {
+  constructor(
+    options: InitOptions<PK, T>,
+    preset: Preset = cloneDeep(_preset)
+  ) {
     this.el = ref();
     this.options = this.fixOptions(options, preset);
   }
