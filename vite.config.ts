@@ -55,6 +55,9 @@ export default defineConfig({
             ["pull", "arrayPull"],
           ],
         },
+        {
+          nanoid: ["nanoid"],
+        },
       ],
       dts: "src/auto-imports.d.ts",
     }),

@@ -1,26 +1,23 @@
 <script setup lang="ts">
-const data = $ref([
+const data = [
   ...Array(100)
     .fill(0)
     .map((_, index) => ({
-      id: `#${index}`,
       A: `A${index}`,
       B: `B${index}`,
       C: `C${index}`,
       D: `D${index}`,
       E: `E${index}`,
     })),
-]);
+];
 
 const worksheetRef = $ref<HTMLElement>();
 const worksheet = new Worksheet({
   // teleport: { to: "#worksheetId" },
   data,
-  columns: [],
-  rows: {},
   filter: {
     row: [
-      (row) => {
+      ({ row }) => {
         return row.A !== "A2";
       },
     ],
@@ -34,29 +31,34 @@ const worksheet = new Worksheet({
 worksheet.init();
 
 function onClick() {
-  worksheet.options.data.shift();
+  const options = worksheet.options;
+  options.table.rows.shift();
+  options.filter.col.push((col) => col.key !== "B");
+
   arrayReplace(
-    worksheet.options.classList.table,
+    options.sheetClassList.table,
     "border-inherit",
     "border-red-500"
   );
 
-  arrayReplace(worksheet.options.columns[0].classList, [
+  arrayReplace(options.table.columns[0].classList, [
     ["w-24", "w-40"],
     ["bg-[#f3f3f3]", "bg-red-300"],
   ]);
+
+  console.log(worksheet);
 }
 
 function onReset() {
-  arrayReplace(worksheet.options.classList.table, [
+  const options = worksheet.options;
+  arrayReplace(options.sheetClassList.table, [
     ["border-red-500", "border-inherit"],
   ]);
 
-  arrayReplace(worksheet.options.columns[0].classList, [
+  arrayReplace(options.table.columns[0].classList, [
     ["w-40", "w-24"],
     ["bg-red-300", "bg-[#f3f3f3]"],
   ]);
-  console.log(worksheet);
 }
 </script>
 

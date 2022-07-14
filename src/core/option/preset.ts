@@ -30,25 +30,25 @@ export const preset = {
   },
   row: {
     classList: [""],
+    label: {
+      classList: [
+        // size
+        "w-auto",
+        // background
+        "bg-[#f3f3f3]",
+        // border
+        "border",
+        "border-[0.5px]",
+        "border-inherit",
+        // text
+        "text-center",
+        "align-middle",
+        // space
+        "px-2",
+      ],
+    },
   },
-  rowLabel: {
-    classList: [
-      // size
-      "w-auto",
-      // background
-      "bg-[#f3f3f3]",
-      // border
-      "border",
-      "border-[0.5px]",
-      "border-inherit",
-      // text
-      "text-center",
-      "align-middle",
-      // space
-      "px-2",
-    ],
-  },
-  classList: {
+  sheetClassList: {
     wrapDiv: [
       // display
       "inline-block",
@@ -76,5 +76,5 @@ export const preset = {
     tbody: [""],
   },
   fullscreen: false,
-  filter: {},
+  nanoid: { size: 10 },
 };

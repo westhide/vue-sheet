@@ -1,19 +1,17 @@
-import type { VNodeRef, ComputedRef } from "vue";
-import type { RefValue } from "vue/macros";
+import type { VNodeRef, UnwrapNestedRefs } from "vue";
 import type { Preset } from "../option/preset";
 import { preset as _preset } from "../option/preset";
 
 type Key = number | string | symbol;
 type CellValue = unknown;
 
-type RowValue<CV extends CellValue = CellValue> = Record<Key, CV> &
-  Partial<Record<"id", Key>>;
-type Data<T extends RowValue> = RefValue<T[]>;
+type RowValue<V extends CellValue = CellValue> = Record<Key, V> &
+  Partial<Record<"__id__", Key>>;
 
 type CellRender = unknown;
 
 // TODO: classList switch to DOMTokenList
-type ClassList = RefValue<string[]>;
+type ClassList = string[];
 type SheetClassList = Record<
   "wrapDiv" | "table" | "tbody" | "thead",
   ClassList
@@ -52,114 +50,98 @@ export interface Column<T extends RowValue = RowValue>
   title: Key;
 }
 
-interface Row {
+interface Row<T extends RowValue> {
+  id: Key;
+  rawIndex: number;
+  row: T;
   classList: ClassList;
-}
-
-interface RowLabel {
-  classList: ClassList;
+  label: {
+    classList: ClassList;
+  };
 }
 
 export interface Options<T extends RowValue> {
   teleport?: { to: string | HTMLElement; disabled?: boolean };
-  data: Data<T>;
-  columns: Column<T>[];
-  rows?: Record<Key, Row>;
-  rowLabels?: Record<Key, RowLabel>;
-  size?: { row: number; col: number };
-  fullscreen?: boolean;
-  classList?: SheetClassList;
-  filter: {
-    row?: Array<(row: T, index: number, array: T[]) => boolean>;
-    col?: Array<(col: Column<T>, index: number, array: Column<T>[]) => boolean>;
-    cell?: Array<(row: T, col: Column<T>) => boolean>;
+  data: T[];
+  table: {
+    columns: Column<T>[];
+    rows: Row<T>[];
   };
+  size: { row: number; col: number };
+  fullscreen: boolean;
+  sheetClassList: SheetClassList;
+  filter: {
+    row: Array<(row: Row<T>, index: number, array: Row<T>[]) => boolean>;
+    col: Array<(col: Column<T>, index: number, array: Column<T>[]) => boolean>;
+    cell: Array<(row: T, col: Column<T>) => boolean>;
+  };
+  nanoid?: { size: number };
+}
+
+interface InitOptions<T extends RowValue>
+  extends Pick<Options<T>, "teleport" | "data">,
+    Partial<
+      Pick<Options<T>, "size" | "fullscreen" | "sheetClassList" | "nanoid">
+    > {
+  table?: Partial<Options<T>["table"]>;
+  filter?: Partial<Options<T>["filter"]>;
 }
 
 export default class Base<T extends RowValue = RowValue> {
   el: VNodeRef;
-  options: Required<Options<T>>;
-  tableData: ComputedRef<Record<Key, T>>;
-  tableColumns: ComputedRef<Column<T>[]>;
+  options: UnwrapNestedRefs<Options<T>>;
 
-  fixOptions(options: Options<T>, preset: Preset): Required<Options<T>> {
-    const dataLen = options.data.length;
-    const tableDataKeys = objectKeys(this.tableData.value);
+  fixOptions(options: InitOptions<T>, preset: Preset) {
+    const table = options.table ?? {};
+    const nanoidSize = options.nanoid?.size ?? preset.nanoid.size;
 
-    // generate defaultOptions
-    const sheetClassList = $ref(preset.classList);
-    const defaultOptions: Partial<Options<T>> = {
-      classList: sheetClassList,
-      fullscreen: preset.fullscreen,
-      size: {
-        row: dataLen ?? 0,
-        col: options.columns.length,
-      },
-    };
-
-    if (dataLen) {
-      // set options.column
-      if (!options.columns.length) {
-        options.columns = objectKeys(options.data[0]).map((key) => {
-          // * use spread avoid ref the same classList
-          const columnClassList = $ref([...preset.column.classList]);
-          return {
-            ...preset.column,
-            classList: columnClassList,
-            key,
-            title: key,
-          };
-        });
-      }
-
-      // set options.rows
-      if (isEmpty(options.rows)) {
-        const rowEntries = tableDataKeys.map((key) => {
-          const rowClassList = $ref([...preset.row.classList]);
-          return [
-            key,
-            {
-              classList: rowClassList,
+    // set table.rows
+    if (!table.rows) {
+      table.rows = options.data.map(
+        (row, index) =>
+          <Row<T>>{
+            id: nanoid(nanoidSize),
+            rawIndex: index,
+            row,
+            classList: [...preset.row.classList],
+            label: {
+              classList: [...preset.row.label.classList],
             },
-          ];
-        });
-        options.rows = Object.fromEntries(rowEntries);
-      }
-
-      // set options.rowLabels
-      if (!options.rowLabels) {
-        const rowLabelEntries = tableDataKeys.map((key) => {
-          const rowLabelClassList = $ref([...preset.rowLabel.classList]);
-          return [
-            key,
-            {
-              classList: rowLabelClassList,
-            },
-          ];
-        });
-        options.rowLabels = Object.fromEntries(rowLabelEntries);
-      }
+          }
+      );
     }
 
-    options = { ...defaultOptions, ...options };
+    // set options.column
+    if (!table.columns) {
+      table.columns = objectKeys(options.data[0]).map((key) => {
+        // * use spread avoid ref the same classList
+        return {
+          ...preset.column,
+          classList: [...preset.column.classList],
+          key,
+          title: key,
+        };
+      });
+    }
 
-    return <Required<Options<T>>>options;
+    options = {
+      table,
+      size: {
+        row: options.data.length,
+        col: table.columns.length,
+      },
+      fullscreen: preset.fullscreen,
+      sheetClassList: preset.sheetClassList,
+      ...options,
+    };
+
+    return reactive(<Options<T>>options);
   }
 
   // * use cloneDeep avoid shallow copy
-  constructor(options: Options<T>, preset: Preset = cloneDeep(_preset)) {
+  constructor(options: InitOptions<T>, preset: Preset = cloneDeep(_preset)) {
     this.el = ref();
-    this.tableData = computed(() => {
-      const { data, filter } = options;
-      const filterData = reduceFilter(data, filter.row);
-      return Object.fromEntries(
-        filterData.map((row, index) => [row.id ?? index, row])
-      );
-    });
     this.options = this.fixOptions(options, preset);
-    this.tableColumns = computed(() =>
-      reduceFilter(this.options.columns, this.options.filter.col)
-    );
   }
 
   fullscreen(activate = !this.options.fullscreen) {
@@ -167,9 +149,9 @@ export default class Base<T extends RowValue = RowValue> {
       this.options.fullscreen = activate;
 
       if (activate) {
-        this.options.classList.table.push("fullscreen");
+        this.options.sheetClassList.table.push("fullscreen");
       } else {
-        arrayPull(this.options.classList.table, "fullscreen");
+        arrayPull(this.options.sheetClassList.table, "fullscreen");
       }
     }
   }
