@@ -5,6 +5,7 @@ import { preset as _preset } from "../option/preset";
 type Key = number | string | symbol;
 type CellValue = unknown;
 
+// * when PK assign,set RowValue[PK] type to Key
 export type PrimaryKey<T> = keyof T | undefined;
 export type RowValue<
   PK extends Key | undefined = undefined,
@@ -160,14 +161,16 @@ export default class Base<
     this.options = this.fixOptions(options, preset);
   }
 
+  // TODO: fullscreen
   fullscreen(activate = !this.options.fullscreen) {
-    if (this.options.fullscreen !== activate) {
+    const { fullscreen, sheetClassList } = this.options;
+    if (fullscreen !== activate) {
       this.options.fullscreen = activate;
 
       if (activate) {
-        this.options.sheetClassList.table.push("fullscreen");
+        sheetClassList.table.push("fullscreen");
       } else {
-        arrayPull(this.options.sheetClassList.table, "fullscreen");
+        arrayPull(sheetClassList.table, "fullscreen");
       }
     }
   }
