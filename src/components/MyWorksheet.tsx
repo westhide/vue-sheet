@@ -19,7 +19,9 @@ export default defineComponent({
             <thead class={sheetClassList.thead}>
               <tr class={sheetClassList.theadRow}>
                 {/* * Corner */}
-                <th class={sheetClassList.corner}></th>
+                <th class={sheetClassList.corner}>
+                  <i-vscode-icons-file-type-excel class="mx-auto" />
+                </th>
                 {tableColumns.map((col) => (
                   // * Column
                   <th class={col.classList}>{col.title}</th>

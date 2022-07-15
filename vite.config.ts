@@ -6,6 +6,8 @@ import Pages from "vite-plugin-pages";
 import VueJsx from "@vitejs/plugin-vue-jsx";
 import Components from "unplugin-vue-components/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
+import Icons from "unplugin-icons/vite";
+import IconsResolver from "unplugin-icons/resolver";
 import AutoImport from "unplugin-auto-import/vite";
 import Inspect from "vite-plugin-inspect";
 import Compression from "vite-plugin-compression";
@@ -42,7 +44,7 @@ export default defineConfig({
       dirs: ["src/components"],
       extensions: ["vue", "tsx"],
       deep: true,
-      resolvers: [AntDesignVueResolver()],
+      resolvers: [IconsResolver(), AntDesignVueResolver()],
       dts: "src/components.d.ts",
       directoryAsNamespace: false,
       globalNamespaces: [],
@@ -55,6 +57,9 @@ export default defineConfig({
         /[\\/]\.git[\\/]/,
         /[\\/]\.nuxt[\\/]/,
       ],
+    }),
+    Icons({
+      autoInstall: true,
     }),
 
     AutoImport({

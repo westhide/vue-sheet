@@ -7,6 +7,7 @@ specifiers:
   '@commitlint/cli': ^17.0.3
   '@commitlint/config-conventional': ^17.0.3
   '@commitlint/types': ^17.0.0
+  '@iconify/json': ^2.1.78
   '@types/lodash': ^4.14.182
   '@types/node': ^18.0.4
   '@typescript-eslint/eslint-plugin': ^5.30.6
@@ -31,6 +32,7 @@ specifiers:
   terser: ^5.14.2
   typescript: ^4.7.4
   unplugin-auto-import: ^0.9.3
+  unplugin-icons: ^0.14.7
   unplugin-vue-components: ^0.21.1
   vite: ^2.9.14
   vite-plugin-banner: ^0.3.0
@@ -52,6 +54,7 @@ devDependencies:
   '@commitlint/cli': 17.0.3
   '@commitlint/config-conventional': 17.0.3
   '@commitlint/types': 17.0.0
+  '@iconify/json': 2.1.78
   '@types/lodash': 4.14.182
   '@types/node': 18.0.4
   '@typescript-eslint/eslint-plugin': 5.30.6_2vt5mtrqleafs33qg2bhpmbaqm
@@ -76,6 +79,7 @@ devDependencies:
   terser: 5.14.2
   typescript: 4.7.4
   unplugin-auto-import: 0.9.3_vite@2.9.14
+  unplugin-icons: 0.14.7_vite@2.9.14
   unplugin-vue-components: 0.21.1_vite@2.9.14+vue@3.2.37
   vite: 2.9.14
   vite-plugin-banner: 0.3.0
@@ -97,6 +101,13 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.1.1
       '@jridgewell/trace-mapping': 0.3.14
+    dev: true
+
+  /@antfu/install-pkg/0.1.0:
+    resolution: {integrity: sha512-VaIJd3d1o7irZfK1U0nvBsHMyjkuyMP3HKYVV53z8DKyulkHKmjhhtccXO51WSPeeSHIeoJEoNOKavYpS7jkZw==}
+    dependencies:
+      execa: 5.1.1
+      find-up: 5.0.0
     dev: true
 
   /@antfu/utils/0.5.2:
@@ -589,6 +600,30 @@ packages:
 
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
+    dev: true
+
+  /@iconify/json/2.1.78:
+    resolution: {integrity: sha512-WxWKgVEsnnj6pQVO9zOCYq3kIDIIbAv+RDxfU66DJw16BjKjXxcUyCDEARFRbqodSFd1p7o6Uw4zJ5iggItaQg==}
+    dependencies:
+      '@iconify/types': 1.1.0
+      pathe: 0.3.2
+    dev: true
+
+  /@iconify/types/1.1.0:
+    resolution: {integrity: sha512-Jh0llaK2LRXQoYsorIH8maClebsnzTcve+7U3rQUSnC11X4jtPnFuyatqFLvMxZ8MLG8dB4zfHsbPfuvxluONw==}
+    dev: true
+
+  /@iconify/utils/1.0.33:
+    resolution: {integrity: sha512-vGeAqo7aGPxOQmGdVoXFUOuyN+0V7Lcrx2EvaiRjxUD1x6Om0Tvq2bdm7E24l2Pz++4S0mWMCVFXe/17EtKImQ==}
+    dependencies:
+      '@antfu/install-pkg': 0.1.0
+      '@antfu/utils': 0.5.2
+      '@iconify/types': 1.1.0
+      debug: 4.3.4
+      kolorist: 1.5.1
+      local-pkg: 0.4.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@jridgewell/gen-mapping/0.1.1:
@@ -5766,6 +5801,38 @@ packages:
     transitivePeerDependencies:
       - esbuild
       - rollup
+      - vite
+      - webpack
+    dev: true
+
+  /unplugin-icons/0.14.7_vite@2.9.14:
+    resolution: {integrity: sha512-TrNnEdpaXMdiG5BsCgvU6cv/gSLYvIk1f8wGCGZmOo4wmi3nqYBuqIEuiXhmmyXdDZuRRpCaOzCnCYYZ5H7U8g==}
+    peerDependencies:
+      '@svgr/core': '>=5.5.0'
+      '@vue/compiler-sfc': ^3.0.2
+      vue-template-compiler: ^2.6.12
+      vue-template-es2015-compiler: ^1.9.0
+    peerDependenciesMeta:
+      '@svgr/core':
+        optional: true
+      '@vue/compiler-sfc':
+        optional: true
+      vue-template-compiler:
+        optional: true
+      vue-template-es2015-compiler:
+        optional: true
+    dependencies:
+      '@antfu/install-pkg': 0.1.0
+      '@antfu/utils': 0.5.2
+      '@iconify/utils': 1.0.33
+      debug: 4.3.4
+      kolorist: 1.5.1
+      local-pkg: 0.4.2
+      unplugin: 0.7.2_vite@2.9.14
+    transitivePeerDependencies:
+      - esbuild
+      - rollup
+      - supports-color
       - vite
       - webpack
     dev: true
