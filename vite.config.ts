@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, splitVendorChunkPlugin } from "vite";
 import { resolve } from "path";
 import Vue from "@vitejs/plugin-vue";
 import Layouts from "vite-plugin-vue-layouts";
@@ -24,6 +24,8 @@ export default defineConfig({
     },
   },
   plugins: [
+    splitVendorChunkPlugin(),
+
     Vue({
       reactivityTransform: true,
     }),
@@ -113,10 +115,12 @@ export default defineConfig({
       },
     }),
 
+    // TODO: [vite:build-html] Cannot destructure property 'renderBuiltUrl' of 'config.experimental' as it is undefined
     Legacy(),
 
     Banner(
       `/**\n * name: ${Pkg.name}\n * version: v${Pkg.version}\n * description: ${Pkg.description}\n * author: ${Pkg.author}\n * homepage: ${Pkg.homepage}\n */`
     ),
   ],
+  // experimental: {},
 });

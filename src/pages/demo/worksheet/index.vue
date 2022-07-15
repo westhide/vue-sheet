@@ -39,7 +39,7 @@ const worksheet = new Worksheet({
 worksheet.init();
 
 function onClick() {
-  const options = worksheet.options;
+  const { options } = worksheet;
   options.table.rows.shift();
   options.filter.col.push((col) => col.key !== "B");
 
@@ -59,7 +59,7 @@ function onClick() {
 }
 
 function onReset() {
-  const options = worksheet.options;
+  const { options } = worksheet;
   arrayReplace(options.sheetClassList.table, [
     ["border-red-500", "border-inherit"],
   ]);
@@ -74,8 +74,8 @@ function onReset() {
 <template>
   <div class="p-2">
     <div ref="teleportTo">Vue Sheet</div>
-    <button @click="onClick" class="border mx-2">Click</button>
-    <button @click="onReset" class="border mx-2">Reset</button>
+    <button class="border mx-2" @click="onClick">Click</button>
+    <button class="border mx-2" @click="onReset">Reset</button>
     <div>
       <MyWorksheet ref="worksheetRef" :worksheet="worksheet" />
     </div>

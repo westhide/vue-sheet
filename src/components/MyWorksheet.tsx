@@ -5,7 +5,7 @@ export default defineComponent({
     worksheet: { type: Worksheet, required: true },
   },
   setup(props) {
-    const { el, options } = computed(() => props.worksheet).value;
+    const { el, options } = props.worksheet;
     const { teleport, sheetClassList, table, filter } = options;
     const tableColumns = $computed(() =>
       reduceFilter(table.columns, filter.col)
@@ -28,7 +28,7 @@ export default defineComponent({
             </thead>
 
             <tbody class={sheetClassList.tbody}>
-              {/*TODO: virtual scroll*/}
+              {/* TODO: virtual scroll */}
               {tableRows.map(
                 ({ row, classList: rowClassList, label }, index) => {
                   return (

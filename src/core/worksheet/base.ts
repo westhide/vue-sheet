@@ -97,6 +97,7 @@ export default class Base<
   T extends RowValue<PK> = RowValue<PK>
 > {
   el: VNodeRef;
+
   options: UnwrapNestedRefs<Options<PK, T>>;
 
   fixOptions(options: InitOptions<PK, T>, preset: Preset) {
@@ -126,7 +127,8 @@ export default class Base<
 
     // set options.column
     if (!table.columns) {
-      table.columns = objectKeys(options.data[0]).map((key) => {
+      const [firstRow] = options.data;
+      table.columns = objectKeys(firstRow).map((key) => {
         // * use spread avoid ref the same classList
         return {
           ...preset.column,
