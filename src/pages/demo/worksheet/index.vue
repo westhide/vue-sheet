@@ -1,4 +1,8 @@
 <script setup lang="ts">
+const { t } = useI18n();
+console.log(t("author"));
+console.log(useChangeCase("west_hide", "camelCase"));
+
 const data = [
   ...Array(100)
     .fill(0)
@@ -73,7 +77,7 @@ function onReset() {
 
 <template>
   <div class="p-2">
-    <div ref="teleportTo">Vue Sheet</div>
+    <div ref="teleportTo">{{ $t("author") }}</div>
     <button class="border mx-2" @click="onClick">Click</button>
     <button class="border mx-2" @click="onReset">Reset</button>
     <div>

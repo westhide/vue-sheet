@@ -12,6 +12,7 @@ module.exports = {
   extends: [
     "plugin:vue/vue3-recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:@intlify/vue-i18n/recommended",
     // "airbnb-base",
     "prettier",
     "plugin:prettier/recommended",
@@ -21,5 +22,11 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "vue/multi-word-component-names": "off",
     "vue/no-setup-props-destructure": "off",
+  },
+  settings: {
+    "vue-i18n": {
+      localeDir: "src/locales/*.{json,json5,yaml,yml}",
+      messageSyntaxVersion: "^9",
+    },
   },
 };

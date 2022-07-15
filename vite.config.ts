@@ -69,6 +69,16 @@ export default defineConfig({
         "vue",
         "vue/macros",
         "vue-router",
+        "pinia",
+        "@vueuse/core",
+        "vue-i18n",
+        "vitest",
+        {
+          "@vueuse/integrations/useNProgress": ["useNProgress"],
+        },
+        {
+          "@vueuse/integrations/useChangeCase": ["useChangeCase"],
+        },
         {
           lodash: [
             "cloneDeep",

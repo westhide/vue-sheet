@@ -9,4 +9,12 @@ const router = createRouter({
   history: createWebHistory(),
 });
 
+router.beforeEach(() => {
+  useNProgress().start();
+});
+
+router.afterEach(() => {
+  useNProgress().done();
+});
+
 export default router;
