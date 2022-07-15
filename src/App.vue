@@ -1,88 +1,16 @@
-<script setup lang="ts">
-const data = [
-  ...Array(100)
-    .fill(0)
-    .map((_, index) => ({
-      id: `#${index}`,
-      A: `A${index}`,
-      B: `B${index}`,
-      C: `C${index}`,
-      D: `D${index}`,
-      E: `E${index}`,
-      F: `F${index}`,
-      G: `G${index}`,
-      H: `H${index}`,
-      I: `I${index}`,
-      J: `J${index}`,
-    })),
-];
-
-const worksheetRef = $ref<HTMLElement>();
-const worksheet = new Worksheet({
-  // teleport: { to: "#worksheetId" },
-  data,
-  primaryKey: "id",
-  filter: {
-    row: [
-      ({ row }) => {
-        return row.A.value !== "A2";
-      },
-    ],
-    col: [
-      (col) => {
-        return col.key !== "D";
-      },
-    ],
-  },
-});
-worksheet.init();
-
-function onClick() {
-  const options = worksheet.options;
-  options.table.rows.shift();
-  options.filter.col.push((col) => col.key !== "B");
-
-  arrayReplace(
-    options.sheetClassList.table,
-    "border-inherit",
-    "border-red-500"
-  );
-
-  arrayReplace(options.table.columns[1].classList, [
-    ["w-24", "w-40"],
-    ["bg-[#f3f3f3]", "bg-red-300"],
-  ]);
-
-  console.log(worksheet);
-}
-
-function onReset() {
-  const options = worksheet.options;
-  arrayReplace(options.sheetClassList.table, [
-    ["border-red-500", "border-inherit"],
-  ]);
-
-  arrayReplace(options.table.columns[1].classList, [
-    ["w-40", "w-24"],
-    ["bg-red-300", "bg-[#f3f3f3]"],
-  ]);
-}
-</script>
-
 <template>
-  <!--  TODO: set global Layout scroll-smooth-->
-  <div class="scroll-smooth">
-    <div id="worksheetId" ref="worksheetRef" class="p-2"></div>
-
-    <button @click="onClick" class="border mx-2">Click</button>
-    <button @click="onReset" class="border mx-2">Reset</button>
-    <div class="p-2">
-      <MyWorksheet :worksheet="worksheet" />
-    </div>
-  </div>
+  <RouterView v-slot="{ Component }">
+    <template v-if="Component">
+      <MyTransition class="scroll-smooth">
+        <KeepAlive :max="10">
+          <Suspense>
+            <component :is="Component" />
+            <template #fallback>
+              <div class="w-screen h-screen">Suspense Fallback...</div>
+            </template>
+          </Suspense>
+        </KeepAlive>
+      </MyTransition>
+    </template>
+  </RouterView>
 </template>
-
-<style>
-#app {
-}
-</style>

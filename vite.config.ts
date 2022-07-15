@@ -1,11 +1,20 @@
 import { defineConfig } from "vite";
 import { resolve } from "path";
 import Vue from "@vitejs/plugin-vue";
+import Layouts from "vite-plugin-vue-layouts";
+import Pages from "vite-plugin-pages";
 import VueJsx from "@vitejs/plugin-vue-jsx";
 import Components from "unplugin-vue-components/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 import AutoImport from "unplugin-auto-import/vite";
 import Inspect from "vite-plugin-inspect";
+import Compression from "vite-plugin-compression";
+import { chunkSplitPlugin as ChunkSplit } from "vite-plugin-chunk-split";
+import Imagemin from "vite-plugin-imagemin";
+import Legacy from "@vitejs/plugin-legacy";
+
+import Pkg from "./package.json";
+import Banner from "vite-plugin-banner";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,6 +26,12 @@ export default defineConfig({
   plugins: [
     Vue({
       reactivityTransform: true,
+    }),
+
+    Layouts({ defaultLayout: "Default", exclude: ["./*/**.*"] }),
+    Pages({
+      extensions: ["vue", "tsx", "md"],
+      exclude: ["**/components/*.{vue,tsx,md}"],
     }),
 
     VueJsx(),
@@ -41,11 +56,12 @@ export default defineConfig({
     }),
 
     AutoImport({
-      dirs: ["src/composable", "src/utils"],
+      dirs: ["src/composables", "src/utils"],
       include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/, /\.md$/],
       imports: [
         "vue",
         "vue/macros",
+        "vue-router",
         {
           lodash: [
             "cloneDeep",
@@ -63,5 +79,44 @@ export default defineConfig({
     }),
 
     Inspect(),
+
+    Compression(),
+
+    ChunkSplit(),
+
+    // image compression
+    Imagemin({
+      gifsicle: {
+        optimizationLevel: 7,
+        interlaced: false,
+      },
+      optipng: {
+        optimizationLevel: 7,
+      },
+      mozjpeg: {
+        quality: 20,
+      },
+      pngquant: {
+        quality: [0.8, 0.9],
+        speed: 4,
+      },
+      svgo: {
+        plugins: [
+          {
+            name: "removeViewBox",
+          },
+          {
+            name: "removeEmptyAttrs",
+            active: false,
+          },
+        ],
+      },
+    }),
+
+    Legacy(),
+
+    Banner(
+      `/**\n * name: ${Pkg.name}\n * version: v${Pkg.version}\n * description: ${Pkg.description}\n * author: ${Pkg.author}\n * homepage: ${Pkg.homepage}\n */`
+    ),
   ],
 });

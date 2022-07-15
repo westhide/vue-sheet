@@ -1,17 +1,11 @@
 import { Teleport } from "vue";
-import Worksheet from "../core/worksheet";
 
-interface Props {
-  worksheet: Worksheet;
-}
-
-export default {
+export default defineComponent({
   props: {
-    worksheet: Worksheet,
+    worksheet: { type: Worksheet, required: true },
   },
-  setup(props: Props) {
-    const worksheet = props.worksheet;
-    const { el, options } = worksheet;
+  setup(props) {
+    const { el, options } = computed(() => props.worksheet).value;
     const { teleport, sheetClassList, table, filter } = options;
     const tableColumns = $computed(() =>
       reduceFilter(table.columns, filter.col)
@@ -65,4 +59,4 @@ export default {
       );
     };
   },
-};
+});
