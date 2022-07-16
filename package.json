@@ -8,12 +8,13 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint \"{src,presets}/**/*.{vue,ts,tsx,html}\" --fix && stylelint \"**/*.{vue,less,postcss,css,scss}\" --fix",
+    "lint": "eslint \"{src,cypress}/**/*.{vue,ts,tsx,json}\" --fix && stylelint \"**/*.{vue,less,postcss,css,scss}\" --fix",
     "lint-staged": "lint-staged",
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
+    "test:cypress": "npx cypress open",
     "webstorm-integration": "vitest --watch --reporter=dot --reporter=json --outputFile=.vitest-result.json",
     "prepare": "husky install"
   },
@@ -106,5 +107,13 @@
   },
   "resolutions": {
     "bin-wrapper": "npm:bin-wrapper-china"
+  },
+  "vite": {
+    "optimizeDeps": {
+      "include": [
+        "cypress",
+        "vitest"
+      ]
+    }
   }
 }
