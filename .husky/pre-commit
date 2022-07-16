@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# code test
-pnpm test:coverage
+pnpm test:run
 pnpm lint-staged

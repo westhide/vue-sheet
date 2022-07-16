@@ -1,9 +1,4 @@
 <script setup lang="ts">
-const { t } = useI18n();
-console.log(t("author"));
-console.log(useChangeCase("west_hide", "camelCase"));
-console.log(import.meta.env);
-
 const data = [
   ...Array(100)
     .fill(0)

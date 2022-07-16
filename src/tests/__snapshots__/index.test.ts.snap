@@ -1,0 +1,5 @@
+// Vitest Snapshot v1
+
+exports[`setup vitest > snapshot 1`] = `"test snapshot"`;
+
+exports[`suite name > snapshot 1`] = `"test snapshot"`;

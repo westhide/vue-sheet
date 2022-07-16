@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { defineConfig, splitVendorChunkPlugin } from "vite";
 import { resolve } from "path";
 import Vue from "@vitejs/plugin-vue";
@@ -24,6 +26,10 @@ export default defineConfig({
     alias: {
       "~/": `${resolve(__dirname, "src")}/`,
     },
+  },
+  define: {
+    // prune vitest code in production
+    "import.meta.vitest": false,
   },
   plugins: [
     splitVendorChunkPlugin(),
@@ -138,4 +144,11 @@ export default defineConfig({
     ),
   ],
   // experimental: {},
+  test: {
+    include: [
+      "**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
+      "**/tests/**.{ts,tsx}",
+    ],
+    includeSource: ["src/**/*.{js,ts,tsx}"],
+  },
 });
