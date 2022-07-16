@@ -107,13 +107,5 @@
   },
   "resolutions": {
     "bin-wrapper": "npm:bin-wrapper-china"
-  },
-  "vite": {
-    "optimizeDeps": {
-      "include": [
-        "cypress",
-        "vitest"
-      ]
-    }
   }
 }
