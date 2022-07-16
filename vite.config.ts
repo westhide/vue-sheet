@@ -11,6 +11,7 @@ import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
 import AutoImport from "unplugin-auto-import/vite";
+// import I18n from "@intlify/unplugin-vue-i18n/vite";
 import Inspect from "vite-plugin-inspect";
 import Compression from "vite-plugin-compression";
 import { chunkSplitPlugin as ChunkSplit } from "vite-plugin-chunk-split";
@@ -100,6 +101,10 @@ export default defineConfig({
       ],
       dts: "src/auto-imports.d.ts",
     }),
+
+    // I18n({
+    //   include: resolve(__dirname, "src/locales/**"),
+    // }),
 
     Inspect(),
 

@@ -47,6 +47,7 @@
     "@commitlint/types": "^17.0.0",
     "@iconify/json": "^2.1.78",
     "@intlify/eslint-plugin-vue-i18n": "^2.0.0",
+    "@intlify/unplugin-vue-i18n": "^0.4.0",
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.4",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
