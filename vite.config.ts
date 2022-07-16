@@ -152,7 +152,7 @@ export default defineConfig({
   test: {
     include: [
       "**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}",
-      "**/tests/**.{ts,tsx}",
+      "**/__tests__/**/*.{ts,tsx}",
     ],
     includeSource: ["src/**/*.{js,ts,tsx}"],
   },
