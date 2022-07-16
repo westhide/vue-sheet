@@ -23,5 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
+# auto import d.ts
 src/auto-imports.d.ts
 src/components.d.ts
+
+# test
+coverage

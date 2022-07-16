@@ -13,3 +13,11 @@ declare module "*.vue" {
   >;
   export default component;
 }
+
+interface ImportMetaEnv {
+  readonly VITE_APP_TITLE: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}

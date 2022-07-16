@@ -11,7 +11,8 @@
     "lint": "eslint \"{src,presets}/**/*.{vue,ts,tsx,html}\" --fix && stylelint \"**/*.{vue,less,postcss,css,scss}\" --fix",
     "lint-staged": "lint-staged",
     "test": "vitest",
-    "coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -54,6 +55,7 @@
     "@vueuse/integrations": "^8.9.3",
     "autoprefixer": "^10.4.7",
     "axios": "^0.27.2",
+    "c8": "^7.11.3",
     "change-case": "^4.1.2",
     "eslint": "^8.19.0",
     "eslint-config-airbnb-base": "^15.0.0",
