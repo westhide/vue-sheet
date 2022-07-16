@@ -1,20 +1,56 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "useDefineForClassFields": true,
+    // Type Checking
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+
+    // Modules
     "module": "esnext",
     "moduleResolution": "node",
-    "strict": true,
-    "jsx": "preserve",
-    "sourceMap": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
+
+    // Emit
+    "downlevelIteration": true,
+    "importHelpers": true,
+    "removeComments": true,
+    "sourceMap": true,
+
+    // JavaScript Support
+    // Editor Support
+
+    // Interop Constraints
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
+    // Language and Environment
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "jsx": "preserve",
     "lib": [
       "esnext",
       "dom"
     ],
-    "skipLibCheck": true
+    "target": "esnext",
+    "useDefineForClassFields": true,
+
+    // Compiler Diagnostics
+    // Projects
+    // Output Formatting
+
+    // Completeness
+    "skipLibCheck": true,
+
+    // Command Line
+    // Watch Options
   },
   "include": [
     "src/**/*.ts",

@@ -41,8 +41,8 @@ export default defineComponent({
                       </td>
                       {tableColumns.map((col) => (
                         //  * Cell
-                        <td class={row[col.key].classList}>
-                          {row[col.key].value}
+                        <td class={row[col.key]?.classList}>
+                          {row[col.key]?.value}
                         </td>
                       ))}
                     </tr>

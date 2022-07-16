@@ -1,6 +1,5 @@
 import type { VNodeRef, UnwrapNestedRefs } from "vue";
-import type { Preset } from "../option/preset";
-import { preset as _preset } from "../option/preset";
+import { type Preset, preset as _preset } from "../option/preset";
 
 type Key = number | string | symbol;
 type CellValue = unknown;
@@ -128,7 +127,7 @@ export default class Base<
     // set options.column
     if (!table.columns) {
       const [firstRow] = options.data;
-      table.columns = objectKeys(firstRow).map((key) => {
+      table.columns = objectKeys(firstRow ?? {}).map((key) => {
         // * use spread avoid ref the same classList
         return {
           ...preset.column,

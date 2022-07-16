@@ -49,7 +49,7 @@ function onClick() {
     "border-red-500"
   );
 
-  arrayReplace(options.table.columns[1].classList, [
+  arrayReplace(options.table.columns[1]!.classList, [
     ["w-24", "w-40"],
     ["bg-[#f3f3f3]", "bg-red-300"],
   ]);
@@ -64,7 +64,7 @@ function onReset() {
     ["border-red-500", "border-inherit"],
   ]);
 
-  arrayReplace(options.table.columns[1].classList, [
+  arrayReplace(options.table.columns[1]!.classList, [
     ["w-40", "w-24"],
     ["bg-red-300", "bg-[#f3f3f3]"],
   ]);

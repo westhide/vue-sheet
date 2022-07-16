@@ -1,11 +1,12 @@
 {
   "name": "vue3-sheet",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Office Excel like Vue Sheet",
   "author": "westhide",
   "homepage": "www.tibetourism.work:4173/login",
   "scripts": {
     "dev": "vite",
+    "check": "vue-tsc --noEmit",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint \"{src,cypress}/**/*.{vue,ts,tsx,json}\" --fix && stylelint \"**/*.{vue,less,postcss,css,scss}\" --fix",
@@ -103,7 +104,7 @@
     "vue-eslint-parser": "^9.0.3",
     "vue-i18n": "^9.1.10",
     "vue-router": "^4.1.2",
-    "vue-tsc": "^0.34.17"
+    "vue-tsc": "^0.38.0"
   },
   "resolutions": {
     "bin-wrapper": "npm:bin-wrapper-china"
