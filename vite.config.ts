@@ -33,6 +33,9 @@ export default defineConfig({
     // prune vitest code in production
     "import.meta.vitest": false,
   },
+  css: {
+    modules: { localsConvention: "camelCaseOnly" },
+  },
   plugins: [
     splitVendorChunkPlugin(),
 
