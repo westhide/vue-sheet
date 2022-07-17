@@ -16,7 +16,7 @@ import Inspect from "vite-plugin-inspect";
 import Compression from "vite-plugin-compression";
 import { chunkSplitPlugin as ChunkSplit } from "vite-plugin-chunk-split";
 import Imagemin from "vite-plugin-imagemin";
-// import Legacy from "@vitejs/plugin-legacy";
+import Legacy from "@vitejs/plugin-legacy";
 import { visualizer as Visualizer } from "rollup-plugin-visualizer";
 
 import Pkg from "./package.json";
@@ -142,8 +142,7 @@ export default defineConfig({
       },
     }),
 
-    // TODO: [vite:build-html] Cannot destructure property 'renderBuiltUrl' of 'config.experimental' as it is undefined
-    // Legacy(),
+    Legacy(),
 
     Banner(
       `/**\n * name: ${Pkg.name}\n * version: v${Pkg.version}\n * description: ${Pkg.description}\n * author: ${Pkg.author}\n * homepage: ${Pkg.homepage}\n */`
