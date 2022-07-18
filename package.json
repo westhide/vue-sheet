@@ -6,11 +6,11 @@
   "homepage": "www.tibetourism.work:4173/login",
   "scripts": {
     "dev": "vite",
-    "check": "vue-tsc --noEmit",
-    "build": "vue-tsc --noEmit && vite build",
+    "check": "vue-tsc --noEmit && pnpm check:wasm",
+    "check:wasm": "cargo check --manifest-path ./wasm-rs/Cargo.toml",
+    "build:": "pnpm build:wasm && pnpm check && vite build",
     "build:wasm": "wasm-pack build ./wasm-rs --target web",
     "preview": "vite preview",
-    "report": "cross-env report=true vite build",
     "lint": "eslint \"{src,cypress}/**/*.{vue,ts,tsx,json}\" --fix && stylelint \"**/*.{vue,less,postcss,css,scss}\" --fix",
     "lint-staged": "lint-staged",
     "test": "vitest",
@@ -42,8 +42,7 @@
     ]
   },
   "dependencies": {
-    "vue": "^3.2.37",
-    "wasm-rs": "file:wasm-rs/pkg"
+    "vue": "^3.2.37"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.3",
@@ -112,7 +111,7 @@
     "vite-plugin-inspect": "^0.6.0",
     "vite-plugin-pages": "^0.25.0",
     "vite-plugin-vue-layouts": "^0.6.0",
-    "vite-plugin-wasm": "^1.0.1",
+    "vite-plugin-wasm-pack": "^0.1.12",
     "vitest": "^0.18.1",
     "vue-eslint-parser": "^9.0.3",
     "vue-i18n": "^9.1.10",

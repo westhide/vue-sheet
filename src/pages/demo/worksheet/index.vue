@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import init, { greet } from "wasm-rs";
-init().then(() => {
+import init, { wasm_setup } from "wasm-rs";
+init().then(async () => {
   // console.log(instance);
-  greet();
+  wasm_setup();
 });
-
 const data = [
   ...Array(100)
     .fill(0)

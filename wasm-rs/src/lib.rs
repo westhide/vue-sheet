@@ -13,7 +13,9 @@ extern "C" {
     fn alert(s: &str);
 }
 
+extern crate web_sys;
+
 #[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, wasm-rs!");
+pub fn wasm_setup() {
+    web_sys::console::log_1(&"Wasm Setup Success".into());
 }
