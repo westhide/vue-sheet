@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import init, { greet } from "wasm-rs";
+init().then(() => {
+  // console.log(instance);
+  greet();
+});
+
 const data = [
   ...Array(100)
     .fill(0)

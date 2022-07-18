@@ -19,6 +19,8 @@ import Imagemin from "vite-plugin-imagemin";
 import Legacy from "@vitejs/plugin-legacy";
 import { visualizer as Visualizer } from "rollup-plugin-visualizer";
 
+// import Wasm from "vite-plugin-wasm";
+
 import Pkg from "./package.json";
 import Banner from "vite-plugin-banner";
 
@@ -60,7 +62,6 @@ export default defineConfig({
       directoryAsNamespace: false,
       globalNamespaces: [],
       directives: true,
-      // importPathTransform: (v) => v,
       allowOverrides: false,
       include: [/\.vue$/, /\.vue\?vue/, /\.tsx$/],
       exclude: [
@@ -146,6 +147,9 @@ export default defineConfig({
     }),
 
     Legacy(),
+
+    // TODO: vite-plugin-wasm@^2 to support vite@^3
+    // Wasm(),
 
     Banner(
       `/**\n * name: ${Pkg.name}\n * version: v${Pkg.version}\n * description: ${Pkg.description}\n * author: ${Pkg.author}\n * homepage: ${Pkg.homepage}\n */`
