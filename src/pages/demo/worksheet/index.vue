@@ -81,6 +81,7 @@ function onReset() {
 
 <template>
   <div class="p-2">
+    <div class="before-left-indigo">Vue Sheet</div>
     <span
       class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-violet-500"
     >
