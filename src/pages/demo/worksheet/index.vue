@@ -22,7 +22,6 @@ const data = [
     })),
 ];
 
-const teleportTo = $ref<HTMLElement>();
 const worksheetRef = $ref<HTMLElement>();
 const worksheet = new Worksheet({
   // teleport: { teleportTo },
@@ -59,6 +58,10 @@ function onClick() {
     ["bg-[#f3f3f3]", "bg-red-300"],
   ]);
 
+  arrayReplace(options.table.rows[4]!.classList, [
+    ["bg-inherit", "bg-blue-300"],
+  ]);
+
   console.log(worksheetRef);
   console.log(worksheet);
 }
@@ -78,9 +81,14 @@ function onReset() {
 
 <template>
   <div class="p-2">
-    <div ref="teleportTo">{{ $t("author") }}</div>
-    <button class="border mx-2" @click="onClick">Click</button>
-    <button class="border mx-2" @click="onReset">Reset</button>
+    <span
+      class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-violet-500"
+    >
+      {{ $t("author") }}
+    </span>
+    <br />
+    <button class="border m-2" @click="onClick">Click</button>
+    <button class="border m-2" @click="onReset">Reset</button>
     <div>
       <MyWorksheet ref="worksheetRef" :worksheet="worksheet" />
     </div>

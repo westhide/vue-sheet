@@ -20,8 +20,8 @@ export const preset = {
       // cursor
       "hover:cursor-grab",
       // transition
-      "transition-all",
-      "ease-in-out",
+      // "transition-all",
+      // "ease-in-out",
       "duration-300",
       // space
       "px-2",
@@ -29,7 +29,11 @@ export const preset = {
     ],
   },
   row: {
-    classList: ["t-row"],
+    classList: [
+      "bg-inherit",
+      // transition
+      "duration-300",
+    ],
     label: {
       classList: [
         // size
@@ -45,10 +49,6 @@ export const preset = {
         "align-middle",
         // cursor
         "hover:cursor-pointer",
-        // transition
-        "transition-all",
-        "ease-in-out",
-        "duration-300",
         // space
         "px-2",
       ],
@@ -74,8 +74,6 @@ export const preset = {
       // cursor
       "hover:cursor-cell",
       // transition
-      "transition-all",
-      "ease-in-out",
       "duration-300",
       // space
       "px-2",
@@ -106,8 +104,6 @@ export const preset = {
       "border-spacing-0",
       "border-inherit",
       // transition
-      "transition-all",
-      "ease-in-out",
       "duration-300",
     ],
     thead: ["thead"],
