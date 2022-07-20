@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import init, { wasm_setup } from "wasm-rs";
-init().then(async () => {
-  // console.log(instance);
+init().then(async (instance) => {
+  console.log(instance);
   wasm_setup();
 });
 const data = [

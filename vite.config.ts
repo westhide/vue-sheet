@@ -85,24 +85,6 @@ export default defineConfig({
         "@vueuse/core",
         "vue-i18n",
         "vitest",
-        {
-          "@vueuse/integrations/useNProgress": ["useNProgress"],
-        },
-        {
-          "@vueuse/integrations/useChangeCase": ["useChangeCase"],
-        },
-        {
-          "lodash-es": [
-            "cloneDeep",
-            "defaultsDeep",
-            "isEmpty",
-            ["remove", "arrayRemove"],
-            ["pull", "arrayPull"],
-          ],
-        },
-        {
-          nanoid: ["nanoid"],
-        },
       ],
       dts: "src/auto-imports.d.ts",
     }),
