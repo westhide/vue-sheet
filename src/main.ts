@@ -12,6 +12,4 @@ app.use(router);
 app.use(store);
 app.use(i18n);
 
-wasm.wasm_setup();
-
 app.mount("#app");
