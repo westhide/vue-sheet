@@ -1,6 +1,7 @@
 mod utils;
 
 use wasm_bindgen::prelude::*;
+use web_sys::console;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -8,14 +9,9 @@ use wasm_bindgen::prelude::*;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-#[wasm_bindgen]
-extern "C" {
-    fn alert(s: &str);
-}
-
 extern crate web_sys;
 
-#[wasm_bindgen]
-pub fn wasm_setup() {
-    web_sys::console::log_1(&"Wasm Setup Success".into());
+#[wasm_bindgen(start)]
+pub fn main() {
+    console::log_1(&"Wasm Setup Success".into())
 }
