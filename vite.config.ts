@@ -76,7 +76,6 @@ export default defineConfig({
 
     AutoImport({
       dirs: ["src/composables", "src/utils"],
-      include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/, /\.md$/],
       imports: [
         "vue",
         "vue/macros",

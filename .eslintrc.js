@@ -20,17 +20,6 @@ module.exports = {
   ],
   rules: {
     "@typescript-eslint/no-non-null-assertion": "off",
-    // TODO: prune after pr merge https://github.com/antfu/unplugin-auto-import/pull/235
-    "comma-dangle": [
-      "error",
-      {
-        arrays: "ignore",
-        objects: "ignore",
-        imports: "never",
-        exports: "ignore",
-        functions: "ignore",
-      },
-    ],
     "vue/multi-word-component-names": "off",
     "vue/no-setup-props-destructure": "off",
   },
