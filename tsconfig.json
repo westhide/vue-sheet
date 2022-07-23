@@ -19,7 +19,7 @@
 
     // Emit
     "downlevelIteration": true,
-    "importHelpers": true,
+    //"importHelpers": true, // if set true,will cause tslib cannot find when use Class decorator
     "removeComments": true,
     "sourceMap": true,
 
