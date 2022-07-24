@@ -1,4 +1,6 @@
+import type { ObjectStore } from "./UseIndexedDB/type";
 import Config from "./UseIndexedDB/config";
+// import indexedDBWorker from "./UseIndexedDB/worker?worker";
 
 interface Index {
   name: string;
@@ -28,22 +30,29 @@ type RequestEvent<T> = Partial<Record<`on${EventType}`, RequestCallBack<T>>>;
 type DBOperator = Operator<IDBDatabase>;
 type DBRequestEvent = RequestEvent<IDBDatabase>;
 
-interface InitOptions<
-  StoreName extends string,
-  Data extends Record<Key, unknown>
-> {
+interface Options<StoreName extends string, Data extends Record<Key, unknown>> {
   name: string;
   stores: Store<StoreName, Data>[];
   events?: DBRequestEvent;
   version?: number;
-  isDeleteIfExist?: boolean;
+  config?: Partial<typeof Config>;
+}
+
+// * transform IDBRequest to async Promise
+function transformRequestToPromise<T>(request: IDBRequest<T>) {
+  return new Promise<T>((resolve, reject) => {
+    request.addEventListener("success", () => resolve(request.result));
+    request.addEventListener("error", () => reject(request.error));
+  });
 }
 
 export class IndexedDB<
   StoreName extends string,
   Data extends Record<Key, unknown>
 > {
-  stores: Store<StoreName, Data>[];
+  options: Options<StoreName, Data>;
+  config: typeof Config;
+  openDBRequest?: IDBOpenDBRequest;
   private _idb?: IDBDatabase;
 
   get idb() {
@@ -66,14 +75,14 @@ export class IndexedDB<
     return indexedDB.open(name, version);
   }
 
-  /// mount operators to indexedDB request
-  mount(
+  // * mount operators to indexedDB request
+  listen(
     fn: DBOperator["fn"],
     type?: DBOperator["type"],
     options?: DBOperator["options"]
   ): unknown;
-  mount(operators: DBOperator | DBOperator[]): unknown;
-  mount(
+  listen(operators: DBOperator | DBOperator[]): unknown;
+  listen(
     operators: unknown,
     type: DBOperator["type"] = "success",
     options?: DBOperator["options"]
@@ -98,36 +107,39 @@ export class IndexedDB<
     }
   }
 
-  /// hook callback function to request event
-  hook(events: DBRequestEvent, request = this.open()) {
+  // * add callback function to request event
+  addEvent(events: DBRequestEvent, request = this.open()) {
     for (const [key, fn] of Object.entries(events)) {
+      // * remove 'on' prefix to get event type
       const type = <EventType>key.substring(2);
       request.addEventListener(type, () => fn(request.result, request));
     }
   }
 
-  constructor({
-    name,
-    stores,
-    events = {},
-    version,
-    isDeleteIfExist = Config.isDeleteIfExist,
-  }: InitOptions<StoreName, Data>) {
-    /// delete database if exist
-    if (isDeleteIfExist) this.drop(name);
+  constructor(options: Options<StoreName, Data>) {
+    this.config = options.config ? { ...Config, ...options.config } : Config;
+    this.options = options;
+  }
+
+  async init() {
+    const { name, stores, events, version } = this.options;
+    const { isDropDatabaseIfExist, isAutoCreateStore } = this.config;
+
+    // * delete database if exist
+    if (isDropDatabaseIfExist) this.drop(name);
 
     const request = this.open(name, version);
 
     const onupgradeneeded = () => {
-      /// create stores
       for (const {
         name: storeName,
         options: storeOptions,
         indexes,
       } of stores) {
+        // * create stores
         const store = request.result.createObjectStore(storeName, storeOptions);
 
-        /// create indexes
+        // * create indexes
         if (indexes) {
           for (const {
             name: indexName,
@@ -139,16 +151,23 @@ export class IndexedDB<
         }
       }
     };
+
     const onsuccess = () => {
-      this._idb = request.result;
+      const idb = request.result;
+      // TODO: fix behavior when upgrade version (close indexedDB at present)
+      idb.addEventListener("versionchange", () => idb.close());
+      this._idb = idb;
     };
 
-    this.hook({ onupgradeneeded, onsuccess, ...events }, request);
+    this.addEvent({ onsuccess }, request);
+    if (isAutoCreateStore) this.addEvent({ onupgradeneeded }, request);
+    if (events) this.addEvent(events, request);
 
-    this.stores = stores;
+    this.openDBRequest = request;
+    return transformRequestToPromise(request);
   }
 
-  /// if storeName is not array,then auto get objectStore
+  // * if storeName is not array,then auto get objectStore
   transaction(storeName: StoreName, mode?: IDBTransactionMode): IDBObjectStore;
   transaction(
     storeName: StoreName[],
@@ -165,12 +184,20 @@ export class IndexedDB<
   }
 
   store(storeName: StoreName, mode: IDBTransactionMode = "readwrite") {
-    return this.transaction(storeName, mode);
+    const store = this.transaction(storeName, mode);
+    for (const key of this.config.objectStoreMethods) {
+      // ! cause illegal invocation if not bind store
+      const fn = store[key].bind(store);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      store[key] = (...arg) => transformRequestToPromise(fn(...arg));
+    }
+    return <ObjectStore>(<unknown>store);
   }
 
   clear(storeName: StoreName | StoreName[]) {
     if (!isArray(storeName)) storeName = [storeName];
-    for (const name of storeName) this.store(name).clear();
+    return Promise.all(storeName.map((name) => this.store(name).clear()));
   }
 
   cursor(
@@ -186,13 +213,13 @@ export class IndexedDB<
   }
 
   deleteStore(storeName: StoreName) {
-    this.close();
     const request = this.open(this.name, this.version + 1);
-    request.onupgradeneeded = () => {
+    request.addEventListener("upgradeneeded", () => {
       const idb = request.result;
       idb.deleteObjectStore(storeName);
       this._idb = idb;
-    };
+    });
+    return transformRequestToPromise(request);
   }
 
   drop(name = this.name) {
