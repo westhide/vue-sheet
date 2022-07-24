@@ -6,7 +6,9 @@
           <Suspense>
             <component :is="Component" />
             <template #fallback>
-              <div class="w-screen h-screen">Suspense Fallback...</div>
+              <div class="w-screen h-screen flex justify-around items-center">
+                <span> Suspense Fallback... </span>
+              </div>
             </template>
           </Suspense>
         </KeepAlive>
